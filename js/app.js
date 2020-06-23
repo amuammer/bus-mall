@@ -67,17 +67,27 @@ function clickListener(event) {
   }
 }
 
+const previousIndexes = [];
 function randomImages() {
   if (roundsCount !== 0){
-    const index1 = randomBetween(0, 19);
-    let index2 = index1; // default equals each others
-    let index3 = index1;
-    while(index2 === index1){
+    let index1 = randomBetween(0, 19);
+    let index2 = randomBetween(0, 19);
+    let index3 = randomBetween(0, 19);
+    while(previousIndexes.includes(index1)){
+      index1 = randomBetween(0, 19);
+    }
+    while(index2 === index1 || previousIndexes.includes(index2)){
       index2 = randomBetween(0, 19);
     }
-    while(index3 === index2 || index3 === index1){
+    while(index3 === index2 || index3 === index1 || previousIndexes.includes(index3)){
       index3 = randomBetween(0, 19);
     }
+
+    // store indexes for the next iteration
+    previousIndexes[0] = index1;
+    previousIndexes[1] = index2;
+    previousIndexes[2] = index3;
+
     // empty old images
     section.innerHTML = "";
     products[index1].render();
