@@ -67,17 +67,27 @@ function clickListener(event) {
   }
 }
 
+const previousIndexes = [];
 function randomImages() {
   if (roundsCount !== 0){
-    const index1 = randomBetween(0, 19);
-    let index2 = index1; // default equals each others
-    let index3 = index1;
-    while(index2 === index1){
+    let index1 = randomBetween(0, 19);
+    let index2 = randomBetween(0, 19);
+    let index3 = randomBetween(0, 19);
+    while(previousIndexes.includes(index1)){
+      index1 = randomBetween(0, 19);
+    }
+    while(index2 === index1 || previousIndexes.includes(index2)){
       index2 = randomBetween(0, 19);
     }
-    while(index3 === index2 || index3 === index1){
+    while(index3 === index2 || index3 === index1 || previousIndexes.includes(index3)){
       index3 = randomBetween(0, 19);
     }
+
+    // store indexes for the next iteration
+    previousIndexes[0] = index1;
+    previousIndexes[1] = index2;
+    previousIndexes[2] = index3;
+
     // empty old images
     section.innerHTML = "";
     products[index1].render();
@@ -90,16 +100,17 @@ function randomImages() {
     document.getElementById("section").removeEventListener("click", clickListener);
     // display results
     section.innerHTML = "";
-    const ul = document.createElement("ul");
+    const labels = [];
+    const clickedDataset = [];
+    const shownDataset = [];
     for (var i = 0; i < products.length; i++) {
       const { name, clicks, shows } = products[i];
-      if(shows) {
-        const li = document.createElement("li");
-        li.innerText = name +" had " + clicks + " votes and was shown " + shows + " times";
-        ul.appendChild(li);
-      }
+      labels[i] = name;
+      clickedDataset[i] = clicks;
+      shownDataset[i] = shows;
     }
-    section.appendChild(ul);
+    document.getElementById('myChart').style.visibility='visible';
+    renderChart(labels, shownDataset, clickedDataset);
   }
 }
 
@@ -113,8 +124,8 @@ document.getElementById("roundsForm").addEventListener("submit", function(event)
   roundsCount = parseInt(event.target.roundsCount.value);
   document.getElementById("allRounds").innerText = roundsCount + " rounds";
   document.getElementById("currentRounds").innerText = roundsCount + " rounds";
-  // on set
   document.getElementById("section").addEventListener("click", clickListener);
+  document.getElementById('myChart').style.visibility='hidden';
   addObjects();
   randomImages();
 });

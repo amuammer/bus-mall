@@ -75,3 +75,8 @@ div.desc {
   margin-top: 10px;
   width: 50%;
 }
+
+#chartContainer {
+  width: 60%;
+  height: 300px;
+}
