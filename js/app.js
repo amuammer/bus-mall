@@ -56,10 +56,15 @@ function randomImages() {
 
     // empty old images
     section.innerHTML = "";
+    console.log("products.length", products.length);
     if(products.length){
       products[index1].render();
       products[index2].render();
-      products[index3].render();  
+      products[index3].render();
+    } else {
+      const h1 = document.createElement("h1")
+      h1.innerText =  "you dont have products, please click submit !";
+      section.appendChild(h1);
     }
   }
 
