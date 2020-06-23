@@ -15,7 +15,7 @@ function loadFromLocalStorage() {
   console.log("loadFromLocalStorage()");
   // empty old values of objects => cuz i want to use push
   products = [];
-  const productsObjectsArray = JSON.parse(localStorage.getItem("products"));
+  const productsObjectsArray = JSON.parse(localStorage.getItem("products")) || [];
   for (var i = 0; i < productsObjectsArray.length; i++) {
     const { name, url, clicks, shows } = productsObjectsArray[i];
     new Product(name, url, clicks, shows);
