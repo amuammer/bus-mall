@@ -100,16 +100,17 @@ function randomImages() {
     document.getElementById("section").removeEventListener("click", clickListener);
     // display results
     section.innerHTML = "";
-    const ul = document.createElement("ul");
+    const labels = [];
+    const clickedDataset = [];
+    const shownDataset = [];
     for (var i = 0; i < products.length; i++) {
       const { name, clicks, shows } = products[i];
-      if(shows) {
-        const li = document.createElement("li");
-        li.innerText = name +" had " + clicks + " votes and was shown " + shows + " times";
-        ul.appendChild(li);
-      }
+      labels[i] = name;
+      clickedDataset[i] = clicks;
+      shownDataset[i] = shows;
     }
-    section.appendChild(ul);
+    document.getElementById('myChart').style.visibility='visible';
+    renderChart(labels, shownDataset, clickedDataset);
   }
 }
 
@@ -123,8 +124,8 @@ document.getElementById("roundsForm").addEventListener("submit", function(event)
   roundsCount = parseInt(event.target.roundsCount.value);
   document.getElementById("allRounds").innerText = roundsCount + " rounds";
   document.getElementById("currentRounds").innerText = roundsCount + " rounds";
-  // on set
   document.getElementById("section").addEventListener("click", clickListener);
+  document.getElementById('myChart').style.visibility='hidden';
   addObjects();
   randomImages();
 });
