@@ -2,73 +2,35 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min) + 1);
 }
 
-let products = [];
-let roundsCount = 25;
-
+// used in randomImages
 const section =  document.getElementById("section");
+// on load addEventListener
+document.getElementById("section").addEventListener("click", clickListener);
 
-function Product(name, url) {
-  this.name = name;
-  this.url = url;
-  this.clicks = 0;
-  this.shows = 0;
-  this.index = products.push(this) - 1; // return new-length
-}
+// firstfull loadFromLocalStorage();
+loadFromLocalStorage();
+// render images
+randomImages();
 
-Product.prototype.render = function (){
-  // views
-  this.shows++;
-  const img = document.createElement("img");
-  img.src = this.url;
-  img["data-index"] = this.index;
-  img.alt = this.name;
-  const div = document.createElement("div");
-  div.classList.add("responsive");
-  div.classList.add("gallery");
-  div.appendChild(img);
-  section.appendChild(div);
-}
-
-
-function addObjects () {
-  products = [];
-  // set objects
-  new Product("bag", "img/bag.jpg");
-  new Product("banana", "img/banana.jpg");
-  new Product("bathroom", "img/bathroom.jpg");
-  new Product("boots", "img/boots.jpg");
-  new Product("breakfast", "img/breakfast.jpg");
-  new Product("bubblegum", "img/bubblegum.jpg");
-  new Product("chair", "img/chair.jpg");
-  new Product("cthulhu", "img/cthulhu.jpg");
-  new Product("dog-duck", "img/dog-duck.jpg");
-  new Product("dragon", "img/dragon.jpg");
-  new Product("pen", "img/pen.jpg");
-  new Product("pet-sweep", "img/pet-sweep.jpg");
-  new Product("scissors", "img/scissors.jpg");
-  new Product("shark", "img/shark.jpg");
-  new Product("sweep", "img/sweep.png");
-  new Product("tauntaun", "img/tauntaun.jpg");
-  new Product("unicorn", "img/unicorn.jpg");
-  new Product("usb", "img/usb.gif");
-  new Product("water-can", "img/water-can.jpg");
-  new Product("wine-glass", "img/wine-glass.jpg");
-}
-
+// renderResultList
+renderResultList();
 
 function clickListener(event) {
   const index = event.target["data-index"];
   if (index){
-    products[index].clicks++;
+    const product = products[index];
+    product.clicks++;
     console.log(products[index]);
     roundsCount--;
     document.getElementById("currentRounds").innerText = roundsCount + " rounds";
+    const content = `${product.name} had ${product.clicks} votes and was shown ${product.shows} times`;
+    document.getElementById(index).innerText = content;
     randomImages();
   }
 }
 
-const previousIndexes = [];
 function randomImages() {
+  console.log("randomImages()");
   if (roundsCount !== 0){
     let index1 = randomBetween(0, 19);
     let index2 = randomBetween(0, 19);
@@ -84,9 +46,10 @@ function randomImages() {
     }
 
     // store indexes for the next iteration
-    previousIndexes[0] = index1;
-    previousIndexes[1] = index2;
-    previousIndexes[2] = index3;
+    previousIndexes = [];
+    previousIndexes.push(index1);
+    previousIndexes.push(index2);
+    previousIndexes.push(index3);
 
     // empty old images
     section.innerHTML = "";
@@ -98,7 +61,7 @@ function randomImages() {
   if (roundsCount === 0) {
     // rmove listener and display results
     document.getElementById("section").removeEventListener("click", clickListener);
-    // display results
+    // delete imgs
     section.innerHTML = "";
     const labels = [];
     const clickedDataset = [];
@@ -109,23 +72,47 @@ function randomImages() {
       clickedDataset[i] = clicks;
       shownDataset[i] = shows;
     }
+
     document.getElementById('myChart').style.visibility='visible';
+    document.getElementById('chartContainer').style.float='right';
     renderChart(labels, shownDataset, clickedDataset);
   }
+
+  // after render products save to localStorage to save the new #shows of the products
+  // and also new value of currentRounds
+  saveToLocalStorage();
 }
 
-
-// on load addEventListener
-document.getElementById("section").addEventListener("click", clickListener);
 
 // set counter
 document.getElementById("roundsForm").addEventListener("submit", function(event) {
   event.preventDefault();
-  roundsCount = parseInt(event.target.roundsCount.value);
-  document.getElementById("allRounds").innerText = roundsCount + " rounds";
+  const inputRoundsNumber = parseInt(event.target.roundsCount.value);
+  totalRounds = inputRoundsNumber;
+  roundsCount = inputRoundsNumber;
+  document.getElementById("totalRounds").innerText = totalRounds + " rounds";
   document.getElementById("currentRounds").innerText = roundsCount + " rounds";
   document.getElementById("section").addEventListener("click", clickListener);
   document.getElementById('myChart').style.visibility='hidden';
-  addObjects();
+  document.getElementById('chartContainer').style.float='';
+  resetProducts(); // reset values of clicks and shown
   randomImages();
+  // renderResultList after resetProducts
+  renderResultList();
 });
+
+function renderResultList(){
+  const resultList = document.getElementById("resultList");
+  // empty old values
+  resultList.innerHTML = "";
+  for (var i = 0; i < products.length; i++) {
+    const { name, clicks, shows, index } =  products[i];
+    const content = `${name} had ${clicks} votes and was shown ${shows} times`;
+    const li = document.createElement("li");
+    li.innerText = content;
+    li.id = index;
+    resultList.appendChild(li);
+    const br = document.createElement("br");
+    resultList.appendChild(br);
+  }
+}
