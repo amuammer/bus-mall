@@ -36,12 +36,15 @@ function randomImages() {
     let index2 = randomBetween(0, 19);
     let index3 = randomBetween(0, 19);
     while(previousIndexes.includes(index1)){
+      console.log("loop in while of check index1");
       index1 = randomBetween(0, 19);
     }
     while(index2 === index1 || previousIndexes.includes(index2)){
+      console.log("loop in while of check index2");
       index2 = randomBetween(0, 19);
     }
     while(index3 === index2 || index3 === index1 || previousIndexes.includes(index3)){
+      console.log("loop in while of check index3");
       index3 = randomBetween(0, 19);
     }
 
@@ -53,9 +56,11 @@ function randomImages() {
 
     // empty old images
     section.innerHTML = "";
-    products[index1].render();
-    products[index2].render();
-    products[index3].render();
+    if(products.length){
+      products[index1].render();
+      products[index2].render();
+      products[index3].render();  
+    }
   }
 
   if (roundsCount === 0) {

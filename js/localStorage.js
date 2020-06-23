@@ -20,8 +20,8 @@ function loadFromLocalStorage() {
     const { name, url, clicks, shows } = productsObjectsArray[i];
     new Product(name, url, clicks, shows);
   }
-  totalRounds = parseInt(localStorage.getItem("totalRounds"));
-  roundsCount = parseInt(localStorage.getItem("roundsCount"));
+  totalRounds = parseInt(localStorage.getItem("totalRounds")) || 25;
+  roundsCount = parseInt(localStorage.getItem("roundsCount")) || 25;
   previousIndexes = localStorage.getItem("previousIndexes") || []; // at the first time is null
 
   // set values of rounds
