@@ -31,7 +31,7 @@ function clickListener(event) {
 
 function randomImages() {
   console.log("randomImages()");
-  if (roundsCount !== 0){
+  if (roundsCount !== 0 && products && products.length){ // default no products
     let index1 = randomBetween(0, 19);
     let index2 = randomBetween(0, 19);
     let index3 = randomBetween(0, 19);
@@ -53,9 +53,6 @@ function randomImages() {
 
     // empty old images
     section.innerHTML = "";
-    products[index1].render();
-    products[index2].render();
-    products[index3].render();
   }
 
   if (roundsCount === 0) {
