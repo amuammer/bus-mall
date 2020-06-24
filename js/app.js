@@ -108,9 +108,10 @@ document.getElementById("roundsForm").addEventListener("submit", function(event)
   document.getElementById('myChart').style.visibility='hidden';
   document.getElementById('chartContainer').style.float='';
   resetProducts(); // reset values of clicks and shown
-  randomImages();
   // renderResultList after resetProducts
   renderResultList();
+  // randomImages will render listItem
+  randomImages();
 });
 
 function renderResultList(){

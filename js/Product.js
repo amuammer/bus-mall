@@ -22,6 +22,7 @@ Product.prototype.render = function (){
 
 Product.prototype.reRenderListItem = function (){
   const content = `${this.name} had ${this.clicks} votes and was shown ${this.shows} times`;
+  console.log(document.getElementById("resultList").childNodes);
   document.getElementById(this.index).innerText = content;
 }
 
