@@ -16,24 +16,13 @@ renderResultList();
 // render images
 randomImages();
 
-var index1; // default ||  can't access lexical declaration `index1' before initialization
-var index2;
-var index3;
-
-function reRenderListItem(index) {
-  console.log("reRenderListItem()", index);
-  const product = products[index];
-  const content = `${product.name} had ${product.clicks} votes and was shown ${product.shows} times`;
-  document.getElementById(index).innerText = content;
-}
-
 function clickListener(event) {
   const index = event.target["data-index"];
   if (index){
     const product = products[index];
     product.clicks++;
     // re render clicked item
-    reRenderListItem(index);
+    products[index].reRenderListItem();
     roundsCount--;
     document.getElementById("currentRounds").innerText = roundsCount + " rounds";
     randomImages();
@@ -43,9 +32,9 @@ function clickListener(event) {
 function randomImages() {
   console.log("randomImages()");
   if (roundsCount !== 0){
-    index1 = randomBetween(0, 19);
-    index2 = randomBetween(0, 19);
-    index3 = randomBetween(0, 19);
+    let index1 = randomBetween(0, 19);
+    let index2 = randomBetween(0, 19);
+    let index3 = randomBetween(0, 19);
     while(previousIndexes.includes(index1)){
       console.log("loop in while of check index1");
       index1 = randomBetween(0, 19);
@@ -67,14 +56,13 @@ function randomImages() {
 
     // empty old images
     section.innerHTML = "";
-    console.log("products.length", products.length);
     if(products.length){
       products[index1].render();
-      reRenderListItem(index1);
+      products[index1].reRenderListItem();
       products[index2].render();
-      reRenderListItem(index2);
+      products[index2].reRenderListItem();
       products[index3].render();
-      reRenderListItem(index3);
+      products[index3].reRenderListItem();
     } else {
       const h1 = document.createElement("h1")
       h1.innerText =  "you dont have products, please click submit !";

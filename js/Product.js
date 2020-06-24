@@ -20,7 +20,10 @@ Product.prototype.render = function (){
   section.appendChild(div);
 }
 
-
+Product.prototype.reRenderListItem = function (){
+  const content = `${this.name} had ${this.clicks} votes and was shown ${this.shows} times`;
+  document.getElementById(this.index).innerText = content;
+}
 
 function resetProducts(){
   console.log("resetProducts()");
